@@ -5,6 +5,7 @@ import com.dag.nexq_userservice.data.mapper.UserMapper;
 import com.dag.nexq_userservice.data.request.LoginRequest;
 import com.dag.nexq_userservice.data.request.RegisterRequest;
 import com.dag.nexq_userservice.data.response.AuthResponse;
+import com.dag.nexq_userservice.data.sec.UserDetailsImpl;
 import com.dag.nexq_userservice.security.TokenGenerator;
 import com.dag.nexq_userservice.services.interfaces.IAuthenticationService;
 import com.dag.nexq_userservice.services.interfaces.IUserService;
@@ -65,5 +66,23 @@ public class AuthenticationService implements IAuthenticationService {
                 .token(token)
                 .error(false)
                 .build();
+    }
+
+    public User getCurrentCustomer() {
+        UserDetailsImpl jwtUserDetails = getCurrentJwtUserDetails();
+        User cusCustomer = null;
+        if (jwtUserDetails != null){
+            cusCustomer = userService.findUserByUsername(jwtUserDetails.getUsername());
+        }
+        return cusCustomer;
+    }
+
+    private UserDetailsImpl getCurrentJwtUserDetails() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl jwtUserDetails = null;
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetailsImpl){
+            jwtUserDetails = (UserDetailsImpl) authentication.getPrincipal();
+        }
+        return jwtUserDetails;
     }
 }

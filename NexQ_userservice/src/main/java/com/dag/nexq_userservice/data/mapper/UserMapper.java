@@ -15,10 +15,8 @@ public interface UserMapper {
 
     @Mapping(target = "authorities", ignore = true)
     UserDetailsImpl convertToUserDetail(User user);
-
     User createUser(RegisterRequest registerRequest);
-    User createUserLogin(LoginRequest loginRequest);
-
+    User oolog(LoginRequest registerRequest);
     UserConfig createConfig(UserConfigRequest userConfigRequest);
 
 }

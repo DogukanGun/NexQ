@@ -33,4 +33,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private Set<Permissions> permissions;
+
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "owner",fetch = FetchType.LAZY)
+    private Set<Quiz> quizzes;
 }

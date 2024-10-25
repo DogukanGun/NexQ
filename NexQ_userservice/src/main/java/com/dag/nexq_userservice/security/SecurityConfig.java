@@ -8,6 +8,7 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -106,11 +107,12 @@ public class SecurityConfig {
             http
                     .authorizeHttpRequests((auth) -> auth
                             .requestMatchers("/swagger-ui/**").permitAll()
+                            .requestMatchers("/error").permitAll()  // Allow everyone to access /error
                             .requestMatchers("/swagger-ui.html").permitAll()
                             .requestMatchers("/v3/api-docs/**").permitAll()
                             .requestMatchers("/auth/**").permitAll()
                             .requestMatchers("/user/**").permitAll()
-                        .anyRequest().authenticated()
+                            .anyRequest().authenticated()
                     )
                     .exceptionHandling((exceptionHandler) ->
                             exceptionHandler.authenticationEntryPoint(authenticationExceptionHandler)
