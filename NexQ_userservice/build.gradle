@@ -51,6 +51,9 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation 'io.github.ollama4j:ollama4j:1.0.79'
+    implementation 'com.google.api-client:google-api-client:1.32.1'
+    implementation 'com.google.code.gson:gson:2.11.0'
+
 }
 
 tasks.named('test') {

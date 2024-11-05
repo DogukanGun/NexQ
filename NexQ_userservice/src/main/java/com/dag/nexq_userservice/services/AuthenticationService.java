@@ -1,7 +1,8 @@
 package com.dag.nexq_userservice.services;
 
+import com.dag.nexq_userservice.config.GoogleAuthConfig;
 import com.dag.nexq_userservice.data.entity.User;
-import com.dag.nexq_userservice.data.mapper.UserMapper;
+import com.dag.nexq_userservice.data.request.GoogleSigninRequest;
 import com.dag.nexq_userservice.data.request.LoginRequest;
 import com.dag.nexq_userservice.data.request.RegisterRequest;
 import com.dag.nexq_userservice.data.response.AuthResponse;
@@ -9,6 +10,13 @@ import com.dag.nexq_userservice.data.sec.UserDetailsImpl;
 import com.dag.nexq_userservice.security.TokenGenerator;
 import com.dag.nexq_userservice.services.interfaces.IAuthenticationService;
 import com.dag.nexq_userservice.services.interfaces.IUserService;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.gson.GsonFactory;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,6 +24,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.util.Collections;
 
 import static com.dag.nexq_userservice.data.mapper.UserMapper.USER_MAPPER;
 
@@ -27,6 +39,7 @@ public class AuthenticationService implements IAuthenticationService {
     private final TokenGenerator tokenGenerator;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+    private final GoogleAuthConfig googleAuthConfig;
 
     @Override
     public AuthResponse login(LoginRequest loginRequest) {
@@ -66,6 +79,35 @@ public class AuthenticationService implements IAuthenticationService {
                 .token(token)
                 .error(false)
                 .build();
+    }
+
+    @Override
+    public AuthResponse signinWithGoogle(GoogleSigninRequest googleSigninRequest) {
+        HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+        JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
+
+        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(HTTP_TRANSPORT, JSON_FACTORY)
+                .setAudience(Collections.singletonList(googleAuthConfig.clientKey()))
+                .build();
+        try {
+            GoogleIdToken idToken = verifier.verify(googleSigninRequest.getId());
+            if (idToken != null) {
+                GoogleIdToken.Payload payload = idToken.getPayload();
+
+                String userId = payload.getSubject();
+                System.out.println("User ID: " + userId);
+
+                String email = payload.getEmail();
+                boolean emailVerified = payload.getEmailVerified();
+                String name = (String) payload.get("name");
+            } else {
+                System.out.println("Invalid ID token.");
+            }
+        } catch (GeneralSecurityException | IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return null;
     }
 
     public User getCurrentCustomer() {

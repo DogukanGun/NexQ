@@ -1,5 +1,6 @@
 package com.dag.nexq_userservice.business;
 
+import com.dag.nexq_userservice.data.request.GoogleSigninRequest;
 import com.dag.nexq_userservice.data.request.LoginRequest;
 import com.dag.nexq_userservice.data.request.RegisterRequest;
 import com.dag.nexq_userservice.data.response.AuthResponse;
@@ -27,4 +28,8 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.register(registerRequest));
     }
 
+    @PostMapping("/google")
+    public ResponseEntity<AuthResponse> signinWithgoogle(@RequestBody GoogleSigninRequest googleSigninRequest){
+        return ResponseEntity.ok(authenticationService.signinWithGoogle(googleSigninRequest));
+    }
 }
