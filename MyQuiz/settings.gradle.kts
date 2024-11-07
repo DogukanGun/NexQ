@@ -13,5 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "MyQuiz"
+rootProject.name = "NexQ_App"
 include(":app")
+ 
