@@ -10,12 +10,14 @@ import com.dag.nexq_app.base.extensions.ObserveAsEvents
 import com.dag.nexq_app.presentation.home.presentation.Home
 import com.dag.nexq_app.presentation.onboard.Onboard
 import com.dag.nexq_app.presentation.onboard.OnboardVM
+import com.dag.nexq_app.presentation.splash.Splash
+import com.dag.nexq_app.presentation.splash.SplashVM
 import com.dag.nexq_app.presentation.userop.presentation.login.Login
 import com.dag.nexq_app.presentation.userop.presentation.login.LoginVM
 
 @Composable
 fun DefaultNavigationHost(
-    startDestination: Destination = Destination.Onboard,
+    startDestination: Destination = Destination.Splash,
     navigator: DefaultNavigator
     ) {
     val navController = rememberNavController()
@@ -33,6 +35,12 @@ fun DefaultNavigationHost(
         navController = navController,
         startDestination = startDestination
     ){
+        composable<Destination.Splash> {
+            val viewModel = hiltViewModel<SplashVM>()
+            Splash(
+                splashVM = viewModel
+            )
+        }
         composable<Destination.Onboard> {
             val viewModel = hiltViewModel<OnboardVM>()
             Onboard(
