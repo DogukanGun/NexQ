@@ -33,7 +33,7 @@ class ObjectModules {
     @Provides
     @Singleton
     fun provideDefaultNavigator():DefaultNavigator{
-        return DefaultNavigator(startDestination = Destination.AuthGraph)
+        return DefaultNavigator(startDestination = Destination.LoginScreen)
     }
 
     @Provides

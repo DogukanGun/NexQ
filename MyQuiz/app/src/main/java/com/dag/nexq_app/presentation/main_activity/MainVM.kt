@@ -2,13 +2,20 @@ package com.dag.nexq_app.presentation.main_activity
 
 import androidx.lifecycle.viewModelScope
 import com.dag.nexq_app.base.BaseVM
+import com.dag.nexq_app.base.navigation.DefaultNavigator
+import com.dag.nexq_app.base.navigation.Destination
 import com.dag.nexq_app.domain.DataPreferencesStore
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class MainVM @Inject constructor(private var dataPreference: DataPreferencesStore) : BaseVM<MainVS>(
+class MainVM @Inject constructor(
+    private var dataPreference: DataPreferencesStore,
+    private var defaultNavigator: DefaultNavigator
+    ) : BaseVM<MainVS>(
     MainVS.Default
 ) {
     fun getColor() {
@@ -20,4 +27,18 @@ class MainVM @Inject constructor(private var dataPreference: DataPreferencesStor
             }
         }
     }
+
+    fun navigate(destination: Destination){
+        viewModelScope.launch {
+            defaultNavigator.navigate(destination)
+        }
+    }
+
+    fun isBottomNavActive(currentRoute:String?): Boolean {
+        return currentRoute?.let {
+            return Destination.NAV_WITHOUT_BOTTOM_NAVBAR
+                .map { it.toString() }.contains(currentRoute).not()
+        } ?: false
+    }
+
 }

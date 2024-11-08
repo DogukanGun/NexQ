@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 fun CustomButton(
     modifier: Modifier,
     backgroundColor: Color,
+    innerPadding:Dp = 0.dp,
     shape: Shape = RoundedCornerShape(32.dp),
     textColor:Color = Color.White,
     text: String,
@@ -41,6 +42,7 @@ fun CustomButton(
         onClick = onClick
     ) {
         Text(
+            modifier = Modifier.padding(innerPadding),
             text = text,
             style = MaterialTheme.typography.bodyMedium
         )

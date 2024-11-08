@@ -16,5 +16,7 @@
     <string name="userops_divider_for_login">Or register with</string>
     <string name="userops_login_button">Login</string>
     <string name="userops_register_button">Register</string>
-
+    <string name="home_screen_create_quiz">Join the Quiz</string>
+    <string name="home_screen_header_title">Your studies</string>
+    <string name="home_screen_header_subtitle">60% about your Progress</string>
 </resources>

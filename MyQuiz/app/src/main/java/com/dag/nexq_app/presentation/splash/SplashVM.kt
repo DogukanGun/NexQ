@@ -17,7 +17,6 @@ class SplashVM @Inject constructor(
     private val dataPreferencesStore: DataPreferencesStore
 ): BaseVM<SplashVS>(SplashVS.Default){
 
-
     fun startApplication(){
         viewModelScope.launch {
             val firstLoginFlow = dataPreferencesStore.read(DataPreferencesStore.FIRST_LOGIN)
@@ -28,7 +27,7 @@ class SplashVM @Inject constructor(
                 val destination = if (it.first) {
                     Destination.Onboard
                 }else if (it.second == ""){
-                    Destination.AuthGraph
+                    Destination.LoginScreen
                 }else {
                     Destination.HomeGraph
                 }

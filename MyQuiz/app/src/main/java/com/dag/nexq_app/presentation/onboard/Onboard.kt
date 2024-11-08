@@ -87,7 +87,9 @@ fun Onboard(
             }
         }
         OnboardVS.StartUserOps -> {
-            navController.navigate(Destination.AuthGraph)
+            navController.navigate(Destination.LoginScreen) {
+                this.popUpTo(0)
+            }
             onboardVM.finishNavigation()
         }
         else ->{}
