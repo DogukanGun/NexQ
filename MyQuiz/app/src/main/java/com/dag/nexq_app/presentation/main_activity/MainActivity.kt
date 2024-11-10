@@ -1,5 +1,6 @@
 package com.dag.nexq_app.presentation.main_activity
 
+import android.app.AlertDialog
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,16 +16,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.dag.nexq_app.base.AlertDialogManager
 import com.dag.nexq_app.base.navigation.DefaultNavigationHost
 import com.dag.nexq_app.base.navigation.DefaultNavigator
 import com.dag.nexq_app.base.navigation.Destination
+import com.dag.nexq_app.data.AlertDialogModel
 import com.dag.nexq_app.presentation.main_activity.components.bottom_navbar.BottomNavbar
 import com.dag.nexq_app.presentation.main_activity.components.bottom_navbar.NavItem
 import com.dag.nexq_app.theme.MyQuizTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -39,9 +45,19 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var defaultNavigator: DefaultNavigator
 
+    @Inject
+    lateinit var alertDialogManager: AlertDialogManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainVM.getColor()
+        if (lifecycleScope.isActive) {
+            lifecycleScope.launch {
+                alertDialogManager.alertFlow.collect { alertDialogModel ->
+                    showAlertDialog(alertDialogModel)
+                }
+            }
+        }
         setContent {
             val viewState = mainVM.viewState.collectAsStateWithLifecycle()
             val statusBarColor = if (viewState.value is MainVS.ColorChanged) {
@@ -59,7 +75,7 @@ class MainActivity : ComponentActivity() {
                     Column(
                         verticalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier.fillMaxSize(),
-                        ) {
+                    ) {
                         DefaultNavigationHost(
                             navigator = defaultNavigator,
                             modifier = Modifier.weight(1f)
@@ -67,10 +83,11 @@ class MainActivity : ComponentActivity() {
                             currentRoute.value = it.destination.route
                                 ?.split(".")?.last()
                         }
-                        if(mainVM.isBottomNavActive(currentRoute.value)){
+                        if (mainVM.isBottomNavActive(currentRoute.value)) {
                             BottomNavbar(
                                 items = NavItem.values().asList(),
-                                currentDestination = currentRoute.value ?: Destination.HomeScreen.toString(),
+                                currentDestination = currentRoute.value
+                                    ?: Destination.HomeScreen.toString(),
                                 onClick = {
                                     mainVM.navigate(it)
                                 }
@@ -80,5 +97,16 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun showAlertDialog(alertDialogModel: AlertDialogModel) {
+        AlertDialog.Builder(this)
+            .setTitle(alertDialogModel.title)
+            .setMessage(alertDialogModel.message)
+            .setPositiveButton("OK") { _, _ ->
+            }
+            .setNegativeButton("Cancel") { _, _ ->
+            }
+            .show()
     }
 }

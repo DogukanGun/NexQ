@@ -2,6 +2,7 @@ package com.dag.nexq_app.di
 
 import android.content.Context
 import com.dag.nexq_app.BuildConfig
+import com.dag.nexq_app.base.AlertDialogManager
 import com.dag.nexq_app.base.navigation.DefaultNavigator
 import com.dag.nexq_app.base.navigation.Destination
 import com.dag.nexq_app.domain.DataPreferencesStore
@@ -54,5 +55,11 @@ class ObjectModules {
             .addConverterFactory(GsonConverterFactory.create())
             .client(httpClient)
             .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAlertDialogManager():AlertDialogManager {
+        return AlertDialogManager()
     }
 }

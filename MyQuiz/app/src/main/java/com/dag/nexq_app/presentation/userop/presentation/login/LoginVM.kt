@@ -18,8 +18,10 @@ import com.dag.nexq_app.base.BaseVM
 import com.dag.nexq_app.presentation.userop.presentation.components.RadioButtonData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import com.dag.nexq_app.R
+import com.dag.nexq_app.base.AlertDialogManager
 import com.dag.nexq_app.base.navigation.DefaultNavigator
 import com.dag.nexq_app.base.navigation.Destination
+import com.dag.nexq_app.data.AlertDialogModel
 import com.dag.nexq_app.domain.DataPreferencesStore
 import com.dag.nexq_app.presentation.userop.domain.model.LoginRequest
 import com.dag.nexq_app.presentation.userop.domain.model.RegisterRequest
