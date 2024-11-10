@@ -24,9 +24,10 @@ fun CreateQuizRow(
     editMode: Boolean = true,
     quizModel: MutableState<QuizModel> // Passing MutableState for inout behavior
 ){
-    val answers = remember {
-        mutableListOf<String>()
+    val enabled = remember(quizModel.value.answers) {
+        quizModel.value.answers.isNotEmpty() && quizModel.value.answers.all { it.answer.isNotBlank() }
     }
+
     Accordion(
         title = "Question ".plus(index),
         modifier = Modifier.fillMaxWidth()
@@ -34,19 +35,23 @@ fun CreateQuizRow(
         QuizBody(
             title = quizModel.value.question,
             editMode = editMode,
-            enabled = answers.map { it.count() }.any { it == 0 },
+            enabled = enabled,
+            buttonText = "Save",
             onClick = {}
         ){
             quizModel.value.answers.forEachIndexed { quizIndex, answer ->
+                Spacer(modifier = Modifier.size(8.dp))
                 QuizOption(
                     index = quizIndex.plus(1),
                     editMode = editMode,
                     option = quizModel.value.answers[quizIndex].answer,
                     onTextChange = {
-                        answers[quizIndex] = it
+                        val updatedAnswers = quizModel.value.answers.toMutableList().apply {
+                            this[quizIndex] = this[quizIndex].copy(answer = it)
+                        }
+                        quizModel.value = quizModel.value.copy(answers = updatedAnswers)
                     }
                 )
-                Spacer(modifier = Modifier.size(8.dp))
             }
         }
     }

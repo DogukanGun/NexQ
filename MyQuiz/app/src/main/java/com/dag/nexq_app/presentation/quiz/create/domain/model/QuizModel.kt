@@ -9,10 +9,10 @@ data class QuizModel(
             return QuizModel(
                 question = "This is the edit question",
                 answers = listOf(
-                    Answer("This is wrong answer",false),
-                    Answer("This is wrong answer",false),
-                    Answer("This is wrong answer",false),
-                    Answer("This is correct answer",true)
+                    Answer("",false),
+                    Answer("",false),
+                    Answer("",false),
+                    Answer("",true)
                 )
             )
         }

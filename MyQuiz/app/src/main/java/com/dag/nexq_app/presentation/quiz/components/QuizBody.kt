@@ -1,5 +1,6 @@
 package com.dag.nexq_app.presentation.quiz.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -19,14 +20,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,19 +33,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dag.nexq_app.R
 import com.dag.nexq_app.base.components.CustomButton
 import com.dag.nexq_app.presentation.quiz.extension.getOption
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuizBody(
     title: String,
     enabled: Boolean = true,
     editMode: Boolean = false,
+    buttonText: String = "Start",
     onClick: () -> Unit,
     onTextChange: ((text: String) -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit
@@ -84,17 +79,19 @@ fun QuizBody(
                     title,
                     style = MaterialTheme.typography.headlineLarge
                 )
-            Image(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.4f)
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(Color.LightGray)
-                    .border(1.dp, Color.Gray, RoundedCornerShape(16.dp))
-                    .padding(16.dp),
-                painter = painterResource(id = R.drawable.quiz_hero),
-                contentDescription = "Quiz Hero"
-            )
+            AnimatedVisibility(visible = editMode.not()) {
+                Image(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(0.4f)
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(Color.LightGray)
+                        .border(1.dp, Color.Gray, RoundedCornerShape(16.dp))
+                        .padding(16.dp),
+                    painter = painterResource(id = R.drawable.quiz_hero),
+                    contentDescription = "Quiz Hero"
+                )
+            }
             Column {
                 content()
             }
@@ -103,7 +100,7 @@ fun QuizBody(
                     .fillMaxWidth(),
                 enabled = enabled,
                 backgroundColor = MaterialTheme.colorScheme.primary,
-                text = "Start"
+                text = buttonText
             ) {
                 onClick()
             }
@@ -140,7 +137,7 @@ fun QuizOption(
                 clicked = clicked.not()
                 onClick?.apply { this() }
             }
-            .padding(16.dp),
+            .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(text = index.getOption().plus("."))
@@ -176,7 +173,7 @@ fun QuizEditTextField(
         modifier = Modifier
             .height(30.dp)
             .background(Color.Transparent, shape = textFieldShape)
-            .border(1.dp,Color.Gray,textFieldShape),
+            .border(1.dp, Color.Gray, textFieldShape),
         textStyle = MaterialTheme.typography.labelSmall,
         singleLine = true,
         decorationBox = { innerTextField ->
