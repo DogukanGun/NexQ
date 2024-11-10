@@ -24,17 +24,19 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun CustomButton(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     backgroundColor: Color,
     innerPadding:Dp = 0.dp,
     shape: Shape = RoundedCornerShape(32.dp),
     textColor:Color = Color.White,
     text: String,
+    enabled: Boolean = true,
     onClick:()->Unit
 ){
     Button(
         modifier = modifier,
         shape = shape,
+        enabled = enabled,
         colors = ButtonDefaults.buttonColors(
             containerColor = backgroundColor,
             contentColor = textColor

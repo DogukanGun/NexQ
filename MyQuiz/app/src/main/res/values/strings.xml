@@ -19,4 +19,9 @@
     <string name="home_screen_create_quiz">Join the Quiz</string>
     <string name="home_screen_header_title">Your studies</string>
     <string name="home_screen_header_subtitle">60% about your Progress</string>
+    <string name="title_activity_quiz">QuizActivity</string>
+    <string name="quiz_add_title">Create Your Quiz</string>
+    <string name="quiz_add_add_pdf">Create from pdf</string>
+    <string name="quiz_add_manual">Create manually</string>
+    <string name="coming_soon">This feature is not ready. Will come soon.</string>
 </resources>

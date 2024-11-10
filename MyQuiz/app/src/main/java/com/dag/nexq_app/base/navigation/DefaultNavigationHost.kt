@@ -6,18 +6,20 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.dag.nexq_app.base.extensions.ObserveAsEvents
 import com.dag.nexq_app.presentation.home.presentation.Home
 import com.dag.nexq_app.presentation.onboard.Onboard
 import com.dag.nexq_app.presentation.onboard.OnboardVM
+import com.dag.nexq_app.presentation.quiz.add.presentation.QuizAdd
+import com.dag.nexq_app.presentation.quiz.add.presentation.QuizAddVM
+import com.dag.nexq_app.presentation.quiz.create.presentation.CreateQuiz
+import com.dag.nexq_app.presentation.quiz.create.presentation.CreateQuizVM
 import com.dag.nexq_app.presentation.splash.Splash
 import com.dag.nexq_app.presentation.splash.SplashVM
 import com.dag.nexq_app.presentation.userop.presentation.login.Login
 import com.dag.nexq_app.presentation.userop.presentation.login.LoginVM
-import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun DefaultNavigationHost(
@@ -25,7 +27,6 @@ fun DefaultNavigationHost(
     navigator: DefaultNavigator,
     modifier: Modifier = Modifier,
     navBackStackEntryState: (NavBackStackEntry) -> Unit
-
 ) {
     val navController = rememberNavController()
     ObserveAsEvents(flow = navigator.navigationActions) { action ->
@@ -70,6 +71,20 @@ fun DefaultNavigationHost(
         ) {
             composable<Destination.HomeScreen> {
                 Home()
+            }
+            composable<Destination.Add> {
+                val viewModel = hiltViewModel<QuizAddVM>()
+                QuizAdd(
+                    addVM = viewModel,
+                    navController = navController
+                )
+            }
+            composable<Destination.Edit> {
+                val viewModel = hiltViewModel<CreateQuizVM>()
+                CreateQuiz(
+                    createQuizVM = viewModel,
+                    navController = navController
+                )
             }
         }
     }

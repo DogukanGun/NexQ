@@ -22,9 +22,12 @@ sealed interface Destination {
     data object Add: Destination
 
     @Serializable
+    data object Edit: Destination
+
+    @Serializable
     data object ComingSoon: Destination
 
     companion object {
-        val NAV_WITHOUT_BOTTOM_NAVBAR = listOf(Splash,Onboard,LoginScreen)
+        val NAV_WITHOUT_BOTTOM_NAVBAR = listOf(Splash,Onboard,LoginScreen,Add)
     }
 }
