@@ -12,6 +12,5 @@ sealed class OnboardVS: BaseVS {
         val color: Color,
         val buttonText: Int
     ) : OnboardVS()
-    data object StartUserOps: OnboardVS()
     data object Default: OnboardVS()
 }

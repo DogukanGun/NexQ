@@ -7,6 +7,7 @@
     <string name="onboard_subtitle_2">Subtitle 2</string>
     <string name="onboard_subtitle_3">Subtitle 3</string>
     <string name="onboard_next">Next</string>
+    <string name="onboard_start">Start</string>
     <string name="userops_login_radio_button">Login</string>
     <string name="userops_register_radio_button">Register</string>
     <string name="userops_email_textfield">Email</string>

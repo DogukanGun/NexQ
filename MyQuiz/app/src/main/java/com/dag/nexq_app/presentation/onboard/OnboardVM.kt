@@ -1,16 +1,12 @@
 package com.dag.nexq_app.presentation.onboard
 
-import android.util.Log
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.viewModelScope
 import com.dag.nexq_app.R
-import com.dag.nexq_app.base.AlertDialogManager
 import com.dag.nexq_app.base.BaseVM
-import com.dag.nexq_app.data.AlertDialogButton
-import com.dag.nexq_app.data.AlertDialogButtonType
-import com.dag.nexq_app.data.AlertDialogModel
+import com.dag.nexq_app.base.navigation.DefaultNavigator
+import com.dag.nexq_app.base.navigation.Destination
 import com.dag.nexq_app.domain.DataPreferencesStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -19,25 +15,21 @@ import javax.inject.Inject
 @HiltViewModel
 class OnboardVM @Inject constructor(
     private val preferencesStore: DataPreferencesStore,
-    private val alertDialogManager: AlertDialogManager
+    private val defaultNavigator: DefaultNavigator
 ) :
     BaseVM<OnboardVS>(
-        initialValue = OnboardVS.OnboardContent(
-            R.drawable.image1,
-            R.string.onboard_title_1,
-            R.string.onboard_subtitle_1,
-            Color.Magenta,
-            R.string.onboard_next
-        )
+        initialValue = OnboardVS.Default
     ) {
 
-    init {
-        viewModelScope.launch {
-            preferencesStore.write(DataPreferencesStore.COLOR, Color.Magenta.toArgb())
-        }
-    }
+    private val firstContent = OnboardVS.OnboardContent(
+        R.drawable.image1,
+        R.string.onboard_title_1,
+        R.string.onboard_subtitle_1,
+        Color.Magenta,
+        R.string.onboard_next
+    )
 
-    val secondContent = OnboardVS.OnboardContent(
+    private val secondContent = OnboardVS.OnboardContent(
         R.drawable.image2,
         R.string.onboard_title_2,
         R.string.onboard_subtitle_2,
@@ -45,45 +37,37 @@ class OnboardVM @Inject constructor(
         R.string.onboard_next
     )
 
-    val thirdContent = OnboardVS.OnboardContent(
+    private val thirdContent = OnboardVS.OnboardContent(
         R.drawable.image3,
         R.string.onboard_title_3,
         R.string.onboard_subtitle_3,
         Color.Red,
-        R.string.onboard_next
+        R.string.onboard_start
     )
 
-    var currentStep = mutableStateOf(0)
+    val contents = listOf(firstContent, secondContent, thirdContent)
 
-    fun startNextStep() {
-        currentStep.value += 1;
-        Log.d("OnboardVM", "Current step: ${currentStep.value}")
-        _viewState.value = when (currentStep.value) {
-            1 -> {
-                Log.d("OnboardVM", "Setting secondContent")
-                viewModelScope.launch {
-                    preferencesStore.write(DataPreferencesStore.COLOR, secondContent.color.toArgb())
-                }
-                secondContent
-            }
+    init {
+        viewModelScope.launch {
+            preferencesStore.write(DataPreferencesStore.COLOR, contents[0].color.toArgb())
+        }
+    }
 
-            2 -> {
-                Log.d("OnboardVM", "Setting thirdContent")
-                viewModelScope.launch {
-                    preferencesStore.write(DataPreferencesStore.COLOR, thirdContent.color.toArgb())
-                }
-                thirdContent
-            }
+    fun changeNavbarColor(contentIndex: Int) {
+        viewModelScope.launch {
+            preferencesStore.write(
+                DataPreferencesStore.COLOR,
+                contents[contentIndex].color.toArgb()
+            )
+        }
+    }
 
-            else -> {
-                Log.d("OnboardVM", "Ending onboarding")
-                OnboardVS.StartUserOps
+    fun goLogin() {
+        viewModelScope.launch {
+            defaultNavigator.navigate(Destination.LoginScreen) {
+                this.popUpTo(0)
             }
         }
-        Log.d("OnboardVM", "New viewState: ${_viewState.value}")
     }
 
-    fun finishNavigation(){
-        _viewState.value = OnboardVS.Default
-    }
 }

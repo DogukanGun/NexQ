@@ -1,6 +1,7 @@
 package com.dag.nexq_app.presentation.userop.presentation.login
 
 import android.content.Context
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,6 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.dag.nexq_app.R
 import com.dag.nexq_app.base.components.CustomButton
 import com.dag.nexq_app.base.components.CustomTextField
+import com.dag.nexq_app.base.components.Visibility
 import com.dag.nexq_app.base.extensions.safeLet
 import com.dag.nexq_app.presentation.userop.domain.model.LoginRequest
 import com.dag.nexq_app.presentation.userop.domain.model.RegisterRequest
@@ -122,7 +124,7 @@ fun UserInputFields(
             }
         )
         Spacer(modifier = Modifier.size(8.dp))
-        if (buttonState.value == R.string.userops_register_radio_button) {
+        AnimatedVisibility(visible = buttonState.value == R.string.userops_register_radio_button) {
             CustomTextField(
                 label = stringResource(id = R.string.userops_username_textfield),
                 onTextChange = {

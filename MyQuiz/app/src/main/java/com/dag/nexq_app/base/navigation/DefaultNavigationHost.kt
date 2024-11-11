@@ -57,7 +57,6 @@ fun DefaultNavigationHost(
             val viewModel = hiltViewModel<OnboardVM>()
             Onboard(
                 onboardVM = viewModel,
-                navController = navController
             )
         }
         composable<Destination.LoginScreen> {
