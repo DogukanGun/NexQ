@@ -1,5 +1,23 @@
 package com.dag.nexq_app.presentation.quiz.create.domain.model
 
+fun convertToAddQuizRequest(quizName:String,quizModelList: List<QuizModel>): AddQuizRequest {
+    return AddQuizRequest(
+        name = quizName,
+        questions = quizModelList.map {
+            Question(
+                questionBody = it.question,
+                answers = it.answers.map { answers ->
+                    QuestionAnswer(
+                        content = answers.answer,
+                        isCorrectAnswer = answers.isCorrectAnswer
+                    )
+                }
+            )
+        }
+    )
+}
+
+
 data class QuizModel(
     var question:String,
     val answers: List<Answer>,

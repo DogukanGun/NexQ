@@ -28,6 +28,6 @@ sealed interface Destination {
     data object ComingSoon: Destination
 
     companion object {
-        val NAV_WITHOUT_BOTTOM_NAVBAR = listOf(Splash,Onboard,LoginScreen,Add)
+        val NAV_WITHOUT_BOTTOM_NAVBAR = listOf(Splash,Onboard,LoginScreen,Add,Edit)
     }
 }

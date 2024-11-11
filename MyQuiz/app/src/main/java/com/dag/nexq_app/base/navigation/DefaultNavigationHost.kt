@@ -83,7 +83,6 @@ fun DefaultNavigationHost(
                 val viewModel = hiltViewModel<CreateQuizVM>()
                 CreateQuiz(
                     createQuizVM = viewModel,
-                    navController = navController
                 )
             }
         }

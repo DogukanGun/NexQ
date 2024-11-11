@@ -37,15 +37,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dag.nexq_app.R
 import com.dag.nexq_app.base.components.CustomButton
+import com.dag.nexq_app.base.components.Visibility
 import com.dag.nexq_app.presentation.quiz.extension.getOption
 
 @Composable
 fun QuizBody(
+    modifier: Modifier = Modifier,
     title: String,
     enabled: Boolean = true,
     editMode: Boolean = false,
     buttonText: String = "Start",
-    onClick: () -> Unit,
+    onClick: (() -> Unit)? = null,
     onTextChange: ((text: String) -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
@@ -57,28 +59,32 @@ fun QuizBody(
         border = BorderStroke(1.dp, Color.Gray),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
+            modifier = modifier
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
-            if(editMode)
-                QuizEditTextField(
-                    text = questionText,
-                    placeholder = title,
-                    onTextChange = {fieldText->
-                        questionText = fieldText
-                        onTextChange?.apply {
-                            this(fieldText)
+            Visibility(
+                case = editMode,
+                contentTrue = {
+                    QuizEditTextField(
+                        text = questionText,
+                        placeholder = title,
+                        onTextChange = { fieldText ->
+                            questionText = fieldText
+                            onTextChange?.apply {
+                                this(fieldText)
+                            }
                         }
-                    }
-                )
-            else
-                Text(
-                    title,
-                    style = MaterialTheme.typography.headlineLarge
-                )
+                    )
+                },
+                contentFalse = {
+                    Text(
+                        title,
+                        style = MaterialTheme.typography.headlineLarge
+                    )
+                }
+            )
             AnimatedVisibility(visible = editMode.not()) {
                 Image(
                     modifier = Modifier
@@ -95,15 +101,18 @@ fun QuizBody(
             Column {
                 content()
             }
-            CustomButton(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                enabled = enabled,
-                backgroundColor = MaterialTheme.colorScheme.primary,
-                text = buttonText
-            ) {
-                onClick()
+            Visibility(case = editMode.not()) {
+                CustomButton(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    enabled = enabled,
+                    backgroundColor = MaterialTheme.colorScheme.primary,
+                    text = buttonText
+                ) {
+                    onClick?.let { it() }
+                }
             }
+
         }
     }
 }
@@ -114,7 +123,7 @@ fun QuizOption(
     option: String,
     clickable: Boolean = true,
     editMode: Boolean = false,
-    onTextChange: ((text:String)->Unit)? = null,
+    onTextChange: ((text: String) -> Unit)? = null,
     onClick: (() -> Unit)? = null
 ) {
     var clicked by remember {
@@ -142,19 +151,24 @@ fun QuizOption(
     ) {
         Text(text = index.getOption().plus("."))
         Spacer(modifier = Modifier.size(8.dp))
-        if (editMode)
-            QuizEditTextField(
-                text = optionTextFieldValue,
-                placeholder = option,
-                onTextChange = {fieldText->
-                    optionTextFieldValue = fieldText
-                    onTextChange?.apply {
-                        this(fieldText)
+        Visibility(
+            case = editMode,
+            contentTrue = {
+                QuizEditTextField(
+                    text = optionTextFieldValue,
+                    placeholder = option,
+                    onTextChange = { fieldText ->
+                        optionTextFieldValue = fieldText
+                        onTextChange?.apply {
+                            this(fieldText)
+                        }
                     }
-                }
-            )
-        else
-            Text(text = option)
+                )
+            },
+            contentFalse = {
+                Text(text = option)
+            }
+        )
 
 
     }
@@ -165,7 +179,7 @@ fun QuizEditTextField(
     text: String,
     placeholder: String,
     onTextChange: (String) -> Unit
-){
+) {
     val textFieldShape = RoundedCornerShape(4.dp)
     BasicTextField(
         value = text,
@@ -179,19 +193,16 @@ fun QuizEditTextField(
         decorationBox = { innerTextField ->
             Box(
                 modifier = Modifier
-                    .padding(start = 8.dp, end = 8.dp) // Horizontal padding
+                    .padding(start = 8.dp, end = 8.dp)
                     .fillMaxSize(),
-                contentAlignment = Alignment.CenterStart // Align text to start
+                contentAlignment = Alignment.CenterStart
             ) {
-                // Show placeholder when text is empty
                 if (text.isEmpty()) {
                     Text(
                         text = placeholder,
                         style = MaterialTheme.typography.labelSmall
                     )
                 }
-
-                // The actual text field content
                 innerTextField()
             }
         }
@@ -200,7 +211,7 @@ fun QuizEditTextField(
 
 @Preview
 @Composable
-fun QuizOptionWithEditModePreview(){
+fun QuizOptionWithEditModePreview() {
     Surface {
         QuizOption(
             index = 1,
@@ -212,7 +223,7 @@ fun QuizOptionWithEditModePreview(){
 
 @Preview
 @Composable
-fun AddQuizEditPreview(){
+fun AddQuizEditPreview() {
     Surface {
         QuizBody(
             title = "Test",

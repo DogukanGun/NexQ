@@ -6,14 +6,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.viewModelScope
 import com.dag.nexq_app.R
+import com.dag.nexq_app.base.AlertDialogManager
 import com.dag.nexq_app.base.BaseVM
+import com.dag.nexq_app.data.AlertDialogButton
+import com.dag.nexq_app.data.AlertDialogButtonType
+import com.dag.nexq_app.data.AlertDialogModel
 import com.dag.nexq_app.domain.DataPreferencesStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class OnboardVM @Inject constructor(private val preferencesStore: DataPreferencesStore) :
+class OnboardVM @Inject constructor(
+    private val preferencesStore: DataPreferencesStore,
+    private val alertDialogManager: AlertDialogManager
+) :
     BaseVM<OnboardVS>(
         initialValue = OnboardVS.OnboardContent(
             R.drawable.image1,

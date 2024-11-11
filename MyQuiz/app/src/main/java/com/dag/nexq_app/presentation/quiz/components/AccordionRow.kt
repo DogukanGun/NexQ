@@ -35,7 +35,7 @@ fun Accordion(
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    Column(modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+    Column(modifier.padding(vertical = 8.dp)) {
         AccordionHeader(title = title, isExpanded = expanded) {
             expanded = !expanded
         }

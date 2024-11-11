@@ -24,4 +24,7 @@
     <string name="quiz_add_add_pdf">Create from pdf</string>
     <string name="quiz_add_manual">Create manually</string>
     <string name="coming_soon">This feature is not ready. Will come soon.</string>
+    <string name="quiz_add_quiz_name">Please add name for your quiz.</string>
+    <string name="save_button_text">Save</string>
+
 </resources>

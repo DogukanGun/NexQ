@@ -61,10 +61,13 @@ class LoginVM @Inject constructor(
         viewModelScope.launch {
             loginUseCase.execute(loginRequest)
                 .collectLatest {
-                    dataPreferencesStore.write(DataPreferencesStore.TOKEN,it.token)
-                    navigator.navigate(Destination.HomeGraph) {
-                        this.popUpTo(0)
+                    if (!it.error && it.token.isNotBlank()){
+                        dataPreferencesStore.write(DataPreferencesStore.TOKEN,it.token)
+                        navigator.navigate(Destination.HomeGraph) {
+                            this.popUpTo(0)
+                        }
                     }
+                    //TODO if fails, show popup
                 }
         }
     }
