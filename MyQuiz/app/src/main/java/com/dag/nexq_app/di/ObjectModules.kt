@@ -5,6 +5,7 @@ import com.dag.nexq_app.BuildConfig
 import com.dag.nexq_app.base.AlertDialogManager
 import com.dag.nexq_app.base.navigation.DefaultNavigator
 import com.dag.nexq_app.base.navigation.Destination
+import com.dag.nexq_app.base.network.HttpLogger
 import com.dag.nexq_app.domain.DataPreferencesStore
 import dagger.Module
 import dagger.Provides
@@ -27,39 +28,41 @@ class ObjectModules {
     @Singleton
     fun provideDataPreferencesStore(
         @ApplicationContext context: Context
-    ):DataPreferencesStore{
+    ): DataPreferencesStore {
         return DataPreferencesStore(context)
     }
 
     @Provides
     @Singleton
-    fun provideDefaultNavigator():DefaultNavigator{
+    fun provideDefaultNavigator(): DefaultNavigator {
         return DefaultNavigator(startDestination = Destination.LoginScreen)
     }
 
     @Provides
     @Singleton
-    fun provideHttpClient(): OkHttpClient {
-        return OkHttpClient().newBuilder().addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
-            .connectTimeout(10000L, TimeUnit.MILLISECONDS)
-            .readTimeout(10000L, TimeUnit.MILLISECONDS)
-            .writeTimeout(10000L, TimeUnit.MILLISECONDS).build()
-    }
-
-    @Provides
-    @Singleton
-    @Named("NotAuthorized")
-    fun provideRetrofit(httpClient: OkHttpClient): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl("http://"+BuildConfig.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(httpClient)
+    fun provideHttpClient(
+        httpLogger: HttpLogger
+    ): OkHttpClient {
+        return OkHttpClient().newBuilder().addInterceptor(
+            HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC)
+        ).addInterceptor(httpLogger).connectTimeout(10000L, TimeUnit.MILLISECONDS)
+            .readTimeout(10000L, TimeUnit.MILLISECONDS).writeTimeout(10000L, TimeUnit.MILLISECONDS)
             .build()
     }
 
     @Provides
     @Singleton
-    fun provideAlertDialogManager():AlertDialogManager {
+    @Named("NotAuthorized")
+    fun provideRetrofit(
+        httpClient: OkHttpClient,
+    ): Retrofit {
+        return Retrofit.Builder().baseUrl(BuildConfig.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create()).client(httpClient).build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAlertDialogManager(): AlertDialogManager {
         return AlertDialogManager()
     }
 }

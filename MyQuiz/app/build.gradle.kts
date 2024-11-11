@@ -10,7 +10,20 @@ plugins {
 android {
     namespace = "com.dag.nexq_app"
     compileSdk = 34
+    flavorDimensions += "version"
+    productFlavors{
+        create("localBuild") {
+            dimension = "version"
+            applicationIdSuffix = ".lcl"
+            versionNameSuffix = "-lcl"
 
+        }
+        create("releaseBuild"){
+            dimension = "version"
+            applicationIdSuffix = ".rls"
+            versionNameSuffix = "-rls"
+        }
+    }
     defaultConfig {
         applicationId = "com.dag.nexq_app"
         minSdk = 24
@@ -22,11 +35,23 @@ android {
             "WEB_API_KEY",
             "\"${project.findProperty("WEB_API_KEY")}\""
         )
-        buildConfigField(
-            "String",
-            "BASE_URL",
-            "\"${project.findProperty("BASE_URL")}\""
-        )
+        productFlavors {
+            getByName("releaseBuild"){
+                buildConfigField(
+                    "String",
+                    "BASE_URL",
+                    "\"${project.findProperty("BASE_URL")}\""
+                )
+            }
+            getByName("localBuild"){
+                buildConfigField(
+                    "String",
+                    "BASE_URL",
+                    "\"http://10.0.2.2:8083\""
+                )
+            }
+        }
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -35,11 +60,12 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            isDebuggable = false
         }
     }
     compileOptions {

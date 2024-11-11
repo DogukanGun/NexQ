@@ -122,11 +122,11 @@ fun CustomAlert(
     }
 }
 
-inline fun buttonOnClick(
+fun buttonOnClick(
     buttonType: AlertDialogButtonType,
     showAlert: MutableState<Boolean>,
-    noinline onCustomButtonClick: (() -> Unit)? = null,
-    noinline onNavigationButtonClick: (() -> Unit)? = null,
+    onCustomButtonClick: (() -> Unit)? = null,
+    onNavigationButtonClick: (() -> Unit)? = null,
 ) {
     when (buttonType) {
         AlertDialogButtonType.REFRESH -> {
