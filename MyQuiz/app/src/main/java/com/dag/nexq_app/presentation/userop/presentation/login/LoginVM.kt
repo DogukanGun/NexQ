@@ -25,6 +25,7 @@ import com.dag.nexq_app.data.AlertDialogModel
 import com.dag.nexq_app.domain.DataPreferencesStore
 import com.dag.nexq_app.presentation.userop.domain.model.LoginRequest
 import com.dag.nexq_app.presentation.userop.domain.model.RegisterRequest
+import com.dag.nexq_app.presentation.userop.domain.model.UserOpResponse
 import com.dag.nexq_app.presentation.userop.domain.usecase.LoginUseCase
 import com.dag.nexq_app.presentation.userop.domain.usecase.RegisterUseCase
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
@@ -61,13 +62,7 @@ class LoginVM @Inject constructor(
         viewModelScope.launch {
             loginUseCase.execute(loginRequest)
                 .collectLatest {
-                    if (!it.error && it.token.isNotBlank()){
-                        dataPreferencesStore.write(DataPreferencesStore.TOKEN,it.token)
-                        navigator.navigate(Destination.HomeGraph) {
-                            this.popUpTo(0)
-                        }
-                    }
-                    //TODO if fails, show popup
+                   handleAuthToken(it)
                 }
         }
     }
@@ -76,7 +71,7 @@ class LoginVM @Inject constructor(
         viewModelScope.launch {
             registerUseCase.execute(registerRequest)
                 .collectLatest {
-
+                    handleAuthToken(it)
                 }
         }
     }
@@ -153,5 +148,15 @@ class LoginVM @Inject constructor(
                 Log.e(TAG, e.toString())
             }
         }
+    }
+
+    private suspend fun handleAuthToken(res:UserOpResponse){
+        if (!res.error && res.token.isNotBlank()){
+            dataPreferencesStore.write(DataPreferencesStore.TOKEN,res.token)
+            navigator.navigate(Destination.HomeGraph) {
+                this.popUpTo(0)
+            }
+        }
+        //TODO if fails, show popup
     }
 }

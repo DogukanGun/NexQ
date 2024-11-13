@@ -142,6 +142,7 @@ fun buttonOnClick(
             }
         }
         AlertDialogButtonType.CUSTOM -> {
+            showAlert.value = false
             if (onCustomButtonClick != null) {
                 onCustomButtonClick()
             }

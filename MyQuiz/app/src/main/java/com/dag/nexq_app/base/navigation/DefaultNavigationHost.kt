@@ -16,6 +16,8 @@ import com.dag.nexq_app.presentation.quiz.add.presentation.QuizAdd
 import com.dag.nexq_app.presentation.quiz.add.presentation.QuizAddVM
 import com.dag.nexq_app.presentation.quiz.create.presentation.CreateQuiz
 import com.dag.nexq_app.presentation.quiz.create.presentation.CreateQuizVM
+import com.dag.nexq_app.presentation.quiz.my.presentation.MyQuizzes
+import com.dag.nexq_app.presentation.quiz.my.presentation.MyQuizzesVM
 import com.dag.nexq_app.presentation.splash.Splash
 import com.dag.nexq_app.presentation.splash.SplashVM
 import com.dag.nexq_app.presentation.userop.presentation.login.Login
@@ -82,6 +84,12 @@ fun DefaultNavigationHost(
                 val viewModel = hiltViewModel<CreateQuizVM>()
                 CreateQuiz(
                     createQuizVM = viewModel,
+                )
+            }
+            composable<Destination.Profile> {
+                val viewModel = hiltViewModel<MyQuizzesVM>()
+                MyQuizzes(
+                    myQuizzesVM = viewModel
                 )
             }
         }

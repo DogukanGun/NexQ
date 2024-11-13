@@ -27,6 +27,9 @@ sealed interface Destination {
     @Serializable
     data object ComingSoon: Destination
 
+    @Serializable
+    data object Profile: Destination
+
     companion object {
         val NAV_WITHOUT_BOTTOM_NAVBAR = listOf(Splash,Onboard,LoginScreen,Add,Edit)
     }
