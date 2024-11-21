@@ -62,8 +62,8 @@ class ObjectModules {
         return OkHttpClient().newBuilder().addInterceptor(
             HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC)
         ).addInterceptor(authenticator).addInterceptor(httpLogger)
-            .connectTimeout(10000L, TimeUnit.MILLISECONDS)
-            .readTimeout(10000L, TimeUnit.MILLISECONDS).writeTimeout(10000L, TimeUnit.MILLISECONDS)
+            .connectTimeout(1, TimeUnit.MINUTES)
+            .readTimeout(1, TimeUnit.MINUTES).writeTimeout(1, TimeUnit.MINUTES)
             .build()
     }
 
@@ -84,6 +84,26 @@ class ObjectModules {
         @Named("Authorized") httpClient: OkHttpClient,
     ): Retrofit {
         return Retrofit.Builder().baseUrl(BuildConfig.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create()).client(httpClient).build()
+    }
+
+    @Provides
+    @Singleton
+    @Named("Block")
+    fun provideRetrofitForBlock(
+        @Named("NotAuthorized") httpClient: OkHttpClient
+    ): Retrofit {
+        return Retrofit.Builder().baseUrl(BuildConfig.BLOCK_API)
+            .addConverterFactory(GsonConverterFactory.create()).client(httpClient).build()
+    }
+
+    @Provides
+    @Singleton
+    @Named("Google")
+    fun provideRetrofitForGoogle(
+        @Named("NotAuthorized") httpClient: OkHttpClient
+    ): Retrofit {
+        return Retrofit.Builder().baseUrl(BuildConfig.GOOGLE_API)
             .addConverterFactory(GsonConverterFactory.create()).client(httpClient).build()
     }
 

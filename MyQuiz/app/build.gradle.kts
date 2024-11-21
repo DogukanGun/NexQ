@@ -35,6 +35,16 @@ android {
             "WEB_API_KEY",
             "\"${project.findProperty("WEB_API_KEY")}\""
         )
+        buildConfigField(
+            "String",
+            "GOOGLE_SEARCH_KEY",
+            "\"${project.findProperty("GOOGLE_SEARCH_KEY")}\""
+        )
+        buildConfigField(
+            "String",
+            "GOOGLE_API",
+            "\"${project.findProperty("GOOGLE_API")}\""
+        )
         productFlavors {
             getByName("releaseBuild"){
                 buildConfigField(
@@ -42,12 +52,22 @@ android {
                     "BASE_URL",
                     "\"${project.findProperty("BASE_URL")}\""
                 )
+                buildConfigField(
+                    "String",
+                    "BLOCK_API",
+                    "\"${project.findProperty("BLOCK_API")}\""
+                )
             }
             getByName("localBuild"){
                 buildConfigField(
                     "String",
                     "BASE_URL",
                     "\"http://10.0.2.2:8083\""
+                )
+                buildConfigField(
+                    "String",
+                    "BLOCK_API",
+                    "\"http://10.0.2.2:3001\""
                 )
             }
         }
@@ -120,6 +140,7 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     implementation("com.google.dagger:hilt-android:2.51.1")
     kapt("com.google.dagger:hilt-android-compiler:2.51.1")
+    implementation("androidx.hilt:hilt-work:1.0.0")
     //Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
     //Navigation
@@ -139,7 +160,8 @@ dependencies {
     //Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:3.4.1")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
 
 
 }

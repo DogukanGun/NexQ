@@ -6,7 +6,7 @@ data class AlertDialogModel(
     val title: String,
     val message: String,
     val positiveButton: AlertDialogButton,
-    val negativeButton: AlertDialogButton,
+    val negativeButton: AlertDialogButton? = null,
 )
 
 data class AlertDialogButton(

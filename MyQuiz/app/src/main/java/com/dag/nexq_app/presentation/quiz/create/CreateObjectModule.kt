@@ -1,6 +1,5 @@
 package com.dag.nexq_app.presentation.quiz.create
 
-import com.dag.nexq_app.presentation.quiz.create.data.dataSource.AddQuizService
 import com.dag.nexq_app.presentation.quiz.create.data.repository.AddQuizServiceImpl
 import com.dag.nexq_app.presentation.quiz.create.domain.repository.IAddQuizService
 import dagger.Module
