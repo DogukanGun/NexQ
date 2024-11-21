@@ -19,8 +19,4 @@ class QuizAddVM @Inject constructor(
         }
     }
 
-    fun readFromPDF(){
-
-    }
-
 }

@@ -25,12 +25,15 @@ sealed interface Destination {
     data object Edit: Destination
 
     @Serializable
+    data object AddWithPdf: Destination
+
+    @Serializable
     data object ComingSoon: Destination
 
     @Serializable
     data object Profile: Destination
 
     companion object {
-        val NAV_WITHOUT_BOTTOM_NAVBAR = listOf(Splash,Onboard,LoginScreen,Add,Edit)
+        val NAV_WITHOUT_BOTTOM_NAVBAR = listOf(Splash,Onboard,LoginScreen,Add,Edit,AddWithPdf)
     }
 }

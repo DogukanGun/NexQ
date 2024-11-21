@@ -29,4 +29,12 @@
     <string name="save_button_text">Save</string>
     <string name="my_quizzes_title">My Quizzes</string>
     <string name="my_quizzes_unknown_quiz_cell">unknown quiz</string>
+    <string name="add_quiz_by_pdf_name_tag">Your selected pdf is</string>
+    <string name="add_quiz_by_pdf_button_text">Choose PDF</string>
+    <string name="add_quiz_by_pdf_button_secondary_text">Choose Another PDF</string>
+    <string name="add_quiz_by_pdf_upload_button_text">Upload PDF</string>
+    <string name="add_quiz_by_pdf_dialog_box_title">Quiz Created"</string>
+    <string name="add_quiz_by_pdf_dialog_box_text">Your quiz is created. What do you want to do with it?</string>
+    <string name="add_quiz_by_pdf_dialog_box_positive_button_text">Save it</string>
+    <string name="add_quiz_by_pdf_dialog_box_negative_button_text">Preview it</string>
 </resources>

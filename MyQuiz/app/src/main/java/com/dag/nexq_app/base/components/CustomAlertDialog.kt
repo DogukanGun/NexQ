@@ -84,18 +84,20 @@ fun CustomAlert(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    CustomButton(
-                        backgroundColor = Color.Gray,
-                        text = alertDialogModel.negativeButton.text
-                    ) {
-                        buttonOnClick(
-                            alertDialogModel.negativeButton.type,
-                            showAlert,
-                            alertDialogModel.negativeButton.onClick,
-                        ){
-                            alertDialogModel.negativeButton.navigate?.let{
-                                coroutineScope.launch {
-                                    defaultNavigator.navigate(it)
+                    Visibility(case = alertDialogModel.negativeButton != null) {
+                        CustomButton(
+                            backgroundColor = Color.Gray,
+                            text = alertDialogModel.negativeButton!!.text
+                        ) {
+                            buttonOnClick(
+                                alertDialogModel.negativeButton.type,
+                                showAlert,
+                                alertDialogModel.negativeButton.onClick,
+                            ){
+                                alertDialogModel.negativeButton.navigate?.let{
+                                    coroutineScope.launch {
+                                        defaultNavigator.navigate(it)
+                                    }
                                 }
                             }
                         }
@@ -167,13 +169,35 @@ fun CustomAlertDialogPreview() {
                 AlertDialogButtonType.CLOSE
             ),
             negativeButton = AlertDialogButton(
-                "positive button",
+                "negative button",
                 {
 
                 },
                 null,
                 AlertDialogButtonType.CLOSE
             )
+        ),
+        showAlert = mutableStateOf(false),
+        defaultNavigator = DefaultNavigator(Destination.LoginScreen)
+    )
+}
+
+
+@Composable
+@Preview
+fun CustomAlertDialogWithoutNegativeButtonPreview() {
+    CustomAlertDialog(
+        alertDialogModel = AlertDialogModel(
+            title = "Test",
+            message = "This is a test",
+            positiveButton = AlertDialogButton(
+                "positive button",
+                {
+
+                },
+                null,
+                AlertDialogButtonType.CLOSE
+            ),
         ),
         showAlert = mutableStateOf(false),
         defaultNavigator = DefaultNavigator(Destination.LoginScreen)

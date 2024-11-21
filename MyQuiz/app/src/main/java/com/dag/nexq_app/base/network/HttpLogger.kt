@@ -1,7 +1,9 @@
 package com.dag.nexq_app.base.network
 
 import android.util.Log
+import com.dag.nexq_app.base.AlertDialogManager
 import com.dag.nexq_app.base.extensions.tryCatch
+import kotlinx.coroutines.coroutineScope
 import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -9,7 +11,9 @@ import okio.Buffer
 import java.nio.charset.Charset
 import javax.inject.Inject
 
-class HttpLogger @Inject constructor() : Interceptor {
+class HttpLogger @Inject constructor(
+    private val alertDialogManager: AlertDialogManager
+) : Interceptor {
     private val requestUrlList = mutableListOf<String>()
 
     companion object {
@@ -27,10 +31,10 @@ class HttpLogger @Inject constructor() : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
-        val requestBody = request.body()
-        setRequestUrlList(request.url())
-        log(REQUEST_URL, "${request.method()} ${request.url()}", getRequestNumber(request.url()))
-        log(REQUEST_HEADERS, "${request.headers()}", getRequestNumber(request.url()))
+        val requestBody = request.body
+        setRequestUrlList(request.url)
+        log(REQUEST_URL, "${request.method} ${request.url}", getRequestNumber(request.url))
+        log(REQUEST_HEADERS, "${request.headers}", getRequestNumber(request.url))
         val requestBuffer = Buffer()
         requestBody?.writeTo(requestBuffer)
 
@@ -42,16 +46,17 @@ class HttpLogger @Inject constructor() : Interceptor {
             log(
                 REQUEST_BODY,
                 requestBuffer.readString(requestCharset),
-                getRequestNumber(request.url())
+                getRequestNumber(request.url)
             )
         }
         val response = tryCatch({
             chain.proceed(request)
         }, {
             log(REQUEST_FAILED, it.toString())
-            throw it
+            log("RESPONSE_CODE", "HTTP Code: Failed - ${it.message}", getRequestNumber(request.url))
+            alertDialogManager.generateServerErrorMessage()
         })
-        val responseBody = response?.body()
+        val responseBody = response?.body
 
         val source = responseBody?.source()
         source?.request(Long.MAX_VALUE)
@@ -65,12 +70,12 @@ class HttpLogger @Inject constructor() : Interceptor {
             log(
                 RESPONSE_BODY,
                 source?.buffer?.clone()?.readString(responseCharset),
-                getRequestNumber(response?.request()?.url())
+                getRequestNumber(response?.request?.url)
             )
         }
 
         // End of request
-        log(END_OF_REQUEST, LOG_DIVIDER, getRequestNumber(response?.request()?.url()))
+        log(END_OF_REQUEST, LOG_DIVIDER, getRequestNumber(response?.request?.url))
 
         return response!!
     }

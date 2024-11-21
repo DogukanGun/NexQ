@@ -16,6 +16,8 @@ import com.dag.nexq_app.presentation.quiz.add.presentation.QuizAdd
 import com.dag.nexq_app.presentation.quiz.add.presentation.QuizAddVM
 import com.dag.nexq_app.presentation.quiz.create.presentation.CreateQuiz
 import com.dag.nexq_app.presentation.quiz.create.presentation.CreateQuizVM
+import com.dag.nexq_app.presentation.quiz.createwithpdf.presentation.CreateQuizWithPDF
+import com.dag.nexq_app.presentation.quiz.createwithpdf.presentation.CreateQuizWithPDFVM
 import com.dag.nexq_app.presentation.quiz.my.presentation.MyQuizzes
 import com.dag.nexq_app.presentation.quiz.my.presentation.MyQuizzesVM
 import com.dag.nexq_app.presentation.splash.Splash
@@ -90,6 +92,12 @@ fun DefaultNavigationHost(
                 val viewModel = hiltViewModel<MyQuizzesVM>()
                 MyQuizzes(
                     myQuizzesVM = viewModel
+                )
+            }
+            composable<Destination.AddWithPdf> {
+                val viewModel = hiltViewModel<CreateQuizWithPDFVM>()
+                CreateQuizWithPDF(
+                    createQuizWithPDFVM = viewModel
                 )
             }
         }
