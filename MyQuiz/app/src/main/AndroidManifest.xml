@@ -2,10 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-
     <application
-        android:name=".NexQApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -13,18 +10,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.NexQ_App"
-        android:usesCleartextTraffic="true"
-        tools:targetApi="34">
+        android:theme="@style/Theme.MyQuiz"
+        tools:targetApi="31">
         <activity
-            android:name=".presentation.quiz_activity.QuizActivity"
-            android:exported="false"
-            android:label="@string/title_activity_quiz"
-            android:theme="@style/Theme.NexQ_App" />
-        <activity
-            android:name=".presentation.mainActivity.MainActivity"
+            android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.NexQ_App">
+            android:label="@string/app_name"
+            android:theme="@style/Theme.MyQuiz">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
