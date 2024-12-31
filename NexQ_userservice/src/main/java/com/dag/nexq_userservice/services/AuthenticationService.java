@@ -6,6 +6,7 @@ import com.dag.nexq_userservice.data.request.GoogleSigninRequest;
 import com.dag.nexq_userservice.data.request.LoginRequest;
 import com.dag.nexq_userservice.data.request.RegisterRequest;
 import com.dag.nexq_userservice.data.response.AuthResponse;
+import com.dag.nexq_userservice.data.response.RegisterPasskeyResponse;
 import com.dag.nexq_userservice.data.sec.UserDetailsImpl;
 import com.dag.nexq_userservice.security.TokenGenerator;
 import com.dag.nexq_userservice.services.interfaces.IAuthenticationService;
@@ -27,7 +28,11 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
+import java.util.List;
 
 import static com.dag.nexq_userservice.data.mapper.UserMapper.USER_MAPPER;
 
@@ -108,6 +113,62 @@ public class AuthenticationService implements IAuthenticationService {
         }
 
         return null;
+    }
+    public static String generateChallenge() {
+        // Generate 32 random bytes
+        SecureRandom random = new SecureRandom();
+        byte[] challenge = new byte[32];
+        random.nextBytes(challenge);
+        // Encode in Base64 (URL-safe) format
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(challenge);
+    }
+    @Override
+    public RegisterPasskeyResponse registerPasskey() {
+        User user = getCurrentCustomer();
+        return RegisterPasskeyResponse
+                .builder()
+                .challenge(generateChallenge())
+                .user(RegisterPasskeyResponse.User
+                        .builder()
+                        .id(user.getId().toString())
+                        .name(user.getUsername())
+                        .displayName(user.getUsername())
+                        .build()
+                )
+                .rp(RegisterPasskeyResponse.Rp.builder()
+                        .name("CredMan App Test")
+                        .id("rp.joostd.nl")
+                        .build())
+                .timeout(1000000)
+                .pubKeyCredParams(List.of(
+                        RegisterPasskeyResponse.PubKeyCredParam.builder()
+                                .type("public-key")
+                                .alg(-7)
+                                .build(),
+                        RegisterPasskeyResponse.PubKeyCredParam.builder()
+                                .type("public-key")
+                                .alg(-257)
+                                .build()
+                ))
+                .attestation("none")
+                .excludeCredentials(List.of(
+                        RegisterPasskeyResponse.ExcludeCredential.builder()
+                                .id("ghi789")
+                                .type("public-key")
+                                .build(),
+                        RegisterPasskeyResponse.ExcludeCredential.builder()
+                                .id("jkl012")
+                                .type("public-key")
+                                .build()
+                ))
+                .authenticatorSelection(RegisterPasskeyResponse.AuthenticatorSelection
+                        .builder()
+                        .residentKey("discouraged")
+                        .userVerification("platform")
+                        .authenticatorAttachment("platform")
+                        .requireResidentKey(true)
+                        .build())
+                .build();
     }
 
     public User getCurrentCustomer() {
