@@ -110,7 +110,8 @@ public class SecurityConfig {
                             .requestMatchers("/error").permitAll()  // Allow everyone to access /error
                             .requestMatchers("/swagger-ui.html").permitAll()
                             .requestMatchers("/v3/api-docs/**").permitAll()
-                            .requestMatchers("/auth/**").permitAll()
+                            .requestMatchers("/auth/register").permitAll()
+                            .requestMatchers("/auth/login").permitAll()
                             .requestMatchers("/user/**").permitAll()
                             .anyRequest().authenticated()
                     )
